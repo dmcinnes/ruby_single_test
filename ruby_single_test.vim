@@ -6,6 +6,13 @@
 " Version: 1.0
 " Author:	Doug McInnes <doug@dougmcinnes.com>
 " URL: http://github.com/dmcinnes/ruby_single_test/tree
+"
+" When a ruby test file with your cursor within a test block, hit
+" <leader>.
+" and that test, and only that test, will run in quickfix.
+" That's it!
+"
+" TODO: add Shoulda support
 
 if exists("loaded_ruby_single_test")
   finish
