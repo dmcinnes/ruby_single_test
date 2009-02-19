@@ -12,6 +12,10 @@
 " and that test, and only that test, will run in quickfix.
 " That's it!
 "
+" To remap the command, to <leader>t for instance, add something
+" like this to your .vimrc:
+" nmap <silent> <leader>t <Plug>ExecuteRubyTest
+"
 " TODO: add Shoulda support
 
 if exists("loaded_ruby_single_test")
