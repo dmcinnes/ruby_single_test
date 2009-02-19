@@ -37,7 +37,7 @@ function s:ExecuteRubyUnitTest()
   let s:line_no = search('^\s*def\s*test_', 'bcnW')
   if s:line_no
     let s:old_make = &makeprg
-    let &l:makeprg = "ruby\ %"
+    let &l:makeprg = "ruby\ \"%\""
     exec "make -n \"" . split(getline(s:line_no))[1] . "\""
     let &l:makeprg = s:old_make
   else
@@ -49,7 +49,7 @@ function s:ExecuteRubySpec()
   let s:line_no = search('^\s*it\s*"', 'bcnW')
   if s:line_no
     let s:old_make = &makeprg
-    let &l:makeprg = "spec\ %"
+    let &l:makeprg = "spec\ \"%\""
     exec "make -l " . s:line_no
     let &l:makeprg = s:old_make
   else
