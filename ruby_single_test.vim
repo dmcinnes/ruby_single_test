@@ -2,8 +2,8 @@
 "
 " Description: Plugin for running a single Ruby test under the cursor
 "              Supports TestUnit and Rspec
-" Last Change:	Feb 15, 2009
-" Version: 1.0
+" Last Change:	Nov 19, 2009
+" Version: 1.0.1
 " Author:	Doug McInnes <doug@dougmcinnes.com>
 " URL: http://github.com/dmcinnes/ruby_single_test/tree
 "
@@ -23,17 +23,17 @@ if exists("loaded_ruby_single_test")
 endif
 let loaded_ruby_single_test = 1
 
-function s:Run()
-  if bufname("%") =~ "_test.rb$"
-    call s:ExecuteRubyUnitTest()
-  elseif bufname("%") =~ "_spec.rb$"
+function! s:Run()
+  if &filetype == "rspec"
     call s:ExecuteRubySpec()
+  elseif bufname("%") =~ "_test.rb$"
+    call s:ExecuteRubyUnitTest()
   else
     echo "Not a test file"
   endif
 endfunction
 
-function s:ExecuteRubyUnitTest()
+function! s:ExecuteRubyUnitTest()
   let s:line_no = search('^\s*def\s*test_', 'bcnW')
   if s:line_no
     let s:old_make = &makeprg
@@ -45,16 +45,10 @@ function s:ExecuteRubyUnitTest()
   endif
 endfunction
 
-function s:ExecuteRubySpec()
-  let s:line_no = search('^\s*it\s*"', 'bcnW')
-  if s:line_no
-    let s:old_make = &makeprg
-    let &l:makeprg = "spec"
-    exec "make! \"%\" -l " . s:line_no
-    let &l:makeprg = s:old_make
-  else
-    echo "Can't find a test!"
-  endif
+function! s:ExecuteRubySpec()
+  let &l:makeprg = "spec"
+  exec "make! \"%\" -l " . line(".")
+  let &l:makeprg = s:old_make
 endfunction
 
 nmap <unique> <script> <Plug>ExecuteRubyTest  <SID>Run
