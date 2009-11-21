@@ -16,6 +16,9 @@
 " like this to your .vimrc:
 " nmap <silent> <leader>t <Plug>ExecuteRubyTest
 "
+" Configuration Options
+"
+"
 " TODO: add Shoulda support
 
 if exists("loaded_ruby_single_test")
@@ -23,10 +26,16 @@ if exists("loaded_ruby_single_test")
 endif
 let loaded_ruby_single_test = 1
 
+if exists("g:ruby_single_test_make_cmd")
+  let s:make_cmd = g:ruby_single_test_make_cmd
+else
+  let s:make_cmd = "make!"
+endif
+
 function! s:Run()
   if &filetype == "rspec"
     call s:ExecuteRubySpec()
-  elseif bufname("%") =~ "_test.rb$"
+  elseif &makeprg =~ "ruby" " Test::Unit
     call s:ExecuteRubyUnitTest()
   else
     echo "Not a test file"
@@ -37,19 +46,20 @@ function! s:ExecuteRubyUnitTest()
   let s:line_no = search('^\s*def\s*test_', 'bcnW')
   if s:line_no
     let s:old_make = &makeprg
-    let &l:makeprg = "ruby"
-    exec "make! \"%\" -n \"" . split(getline(s:line_no))[1] . "\""
-    let &l:makeprg = s:old_make
+    exec s:make_cmd . " \"%\" -n \"" . split(getline(s:line_no))[1] . "\""
   else
     echo "Can't find a test!"
   endif
 endfunction
 
 function! s:ExecuteRubySpec()
-  let &l:makeprg = "spec"
-  exec "make! \"%\" -l " . line(".")
-  let &l:makeprg = s:old_make
+  exec s:make_cmd . " \"%\" -l " . line(".")
 endfunction
+
+augroup RUBY_SINGLE_TEST
+  au!
+  au BufNewFile,BufRead *_test.rb let &l:makeprg = "ruby"
+augroup END
 
 nmap <unique> <script> <Plug>ExecuteRubyTest  <SID>Run
 nmap <SID>Run  :call <SID>Run()<CR>
