@@ -16,7 +16,9 @@
 " like this to your .vimrc:
 " nmap <silent> <leader>t <Plug>ExecuteRubyTest
 "
-" Configuration Options
+" Ruby Single Test default to using make! with a bang.  To disable
+" this behavior drop this in your .vimrc:
+" let g:ruby_single_test_no_bang = 1
 "
 "
 " TODO: add Shoulda support
@@ -26,13 +28,8 @@ if exists("loaded_ruby_single_test")
 endif
 let loaded_ruby_single_test = 1
 
-if exists("g:ruby_single_test_make_cmd")
-  let s:make_cmd = g:ruby_single_test_make_cmd
-else
-  let s:make_cmd = "make!"
-endif
-
 function! s:Run()
+  let s:make_cmd = "make" . (exists("g:ruby_single_test_no_bang") ? "" : "!")
   if &filetype == "rspec"
     call s:ExecuteRubySpec()
   elseif &makeprg =~ "ruby" " Test::Unit
