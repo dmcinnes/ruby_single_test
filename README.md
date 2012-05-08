@@ -6,11 +6,11 @@ VIM plugin for running a single Ruby test under the cursorr.
 Supports Test::Unit and Rspec.
 
 When editing a Ruby test file, hit
-<leader>.
+`<leader>.`
 and the test the cursor is over, and only that test, will run in quickfix.
 That's it!
 
-To remap the command, to <leader>t for instance, add something
+To remap the command, to `<leader>t` for instance, add something
 like this to your .vimrc:
 `nmap <silent> <leader>t <Plug>ExecuteRubyTest`
 
