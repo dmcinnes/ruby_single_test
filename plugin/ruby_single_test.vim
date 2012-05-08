@@ -30,7 +30,7 @@ let loaded_ruby_single_test = 1
 
 function! s:Run()
   let s:make_cmd = "make" . (exists("g:ruby_single_test_no_bang") ? "" : "!")
-  if &filetype == "rspec"
+  if &filetype == "rspec" || &makeprg =~ "spec"
     call s:ExecuteRubySpec()
   elseif &makeprg =~ "ruby" " Test::Unit
     call s:ExecuteRubyUnitTest()
@@ -42,7 +42,6 @@ endfunction
 function! s:ExecuteRubyUnitTest()
   let s:line_no = search('^\s*def\s*test_', 'bcnW')
   if s:line_no
-    let s:old_make = &makeprg
     exec s:make_cmd . " \"%\" -n \"" . split(getline(s:line_no))[1] . "\""
   else
     echo "Can't find a test!"
@@ -52,11 +51,6 @@ endfunction
 function! s:ExecuteRubySpec()
   exec s:make_cmd . " \"%\" -l " . line(".")
 endfunction
-
-augroup RUBY_SINGLE_TEST
-  au!
-  au BufNewFile,BufRead *_test.rb let &l:makeprg = "ruby"
-augroup END
 
 nmap <unique> <script> <Plug>ExecuteRubyTest  <SID>Run
 nmap <SID>Run  :call <SID>Run()<CR>
