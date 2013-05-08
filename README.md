@@ -3,7 +3,7 @@ RubySingleTest
 
 VIM plugin for running a single Ruby test under the cursorr.
 
-Supports Test::Unit and Rspec.
+Supports Test::Unit, Rspec and Minitest.
 
 When editing a Ruby test file, hit
 `<leader>.`
