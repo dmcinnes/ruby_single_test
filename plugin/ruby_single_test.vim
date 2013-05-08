@@ -1,9 +1,9 @@
 " Ruby Single Test
 "
 " Description: Plugin for running a single Ruby test under the cursor
-"              Supports TestUnit and Rspec
-" Last Change:	Nov 19, 2009
-" Version: 1.0.1
+"              Supports TestUnit, Rspec and Minitest
+" Last Change:	May 8, 2013
+" Version: 1.0.2
 " Author:	Doug McInnes <doug@dougmcinnes.com>
 " URL: http://github.com/dmcinnes/ruby_single_test/tree
 "
@@ -41,8 +41,18 @@ endfunction
 
 function! s:ExecuteRubyUnitTest()
   let s:line_no = search('^\s*def\s*test_', 'bcnW')
+
   if s:line_no
-    exec s:make_cmd . " \"%\" -n \"" . split(getline(s:line_no))[1] . "\""
+    let s:selector = split(getline(s:line_no), ' ')[1]
+  else
+    let s:line_no = search('\v^\s*(it|test|specify)\s+"', 'bcnW')
+    if s:line_no
+      let s:selector = "/" . split(getline(s:line_no), '"')[1] . "/"
+    endif
+  endif
+
+  if s:line_no
+    exec s:make_cmd . " \"%\" -n \"" . s:selector . "\""
   else
     echo "Can't find a test!"
   endif
