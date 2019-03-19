@@ -59,7 +59,7 @@ function! s:ExecuteRubyUnitTest()
 endfunction
 
 function! s:ExecuteRubySpec()
-  exec s:make_cmd . " \"%\" -l " . line(".")
+  exec s:make_cmd . " \"%\":" . line(".")
 endfunction
 
 nmap <unique> <script> <Plug>ExecuteRubyTest  <SID>Run
